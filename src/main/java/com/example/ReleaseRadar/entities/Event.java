@@ -11,25 +11,25 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private EventType eventType;
+   // @Enumerated(EnumType.STRING)  // event type a color üzerinden erişir
+   // private EventType eventType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id")
     private Color color;
 
     private String title;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate date; // start date end date diye ayırmaya gerek yok 365 tane event olması lazım zaten
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //burası gereksiz gibi
     @JoinColumn(name = "created_by")
     private User createdBy;
 

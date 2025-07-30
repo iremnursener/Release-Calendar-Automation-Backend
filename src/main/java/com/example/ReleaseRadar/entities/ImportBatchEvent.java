@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "import_batch_events")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ImportBatchEvent {
 
     @Id

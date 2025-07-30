@@ -1,6 +1,7 @@
 package com.example.ReleaseRadar.entities;
 
 import com.example.ReleaseRadar.enums.CriticalityLevel;
+import com.example.ReleaseRadar.enums.EventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,9 @@ public class Color {
 
     @Enumerated(EnumType.STRING)
     private CriticalityLevel criticalityLevel;
+
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
 
     private Boolean isActive;
 
