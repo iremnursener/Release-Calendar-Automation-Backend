@@ -10,4 +10,6 @@ public class ReleaseRadarApplication {
 		SpringApplication.run(ReleaseRadarApplication.class, args);
 	}
 
-}
+
+
+  }
