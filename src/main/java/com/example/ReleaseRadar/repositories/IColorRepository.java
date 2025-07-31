@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface IColorRepository extends JpaRepository<Color, Long> {
 
-    Optional<Color> findByColorHex(String hex);
+    Optional<Color> findByColorHexIgnoreCase(String hex);
 }

@@ -14,6 +14,7 @@ public class UserService {
 
 private final IUserRepository userRepository;
 
+// LOGIN İŞLEMLERİ OTURUM FALAN OLMADIĞI İÇİN GEREK YOK
 //    public User getCurrentLoggedInUser() {
 //        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 //        return userRepository.findByEmail(email)
