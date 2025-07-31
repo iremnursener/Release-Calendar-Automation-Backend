@@ -17,7 +17,7 @@ public class ImportExcelController {
     private final ImportExcelService importExcelService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadExcel(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadExcel(@RequestParam("file") MultipartFile file) { //response dönülecek
         try {
             importExcelService.importExcel(file);
             return ResponseEntity.ok("Excel dosyası başarıyla yüklendi.");

@@ -4,4 +4,5 @@ public enum EventType {
     FREEZE,
     RELEASE,
     BUSY_DAY,
+    IMPORTANT,
 }

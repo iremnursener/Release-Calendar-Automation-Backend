@@ -41,14 +41,13 @@ public class Color {
 
 
 
-
     @PrePersist
-    protected void onCreate() {
+    protected void createDate() {
         createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    protected void updateDate() {
         updatedAt = LocalDateTime.now();
     }
 
