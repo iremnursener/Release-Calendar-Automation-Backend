@@ -47,6 +47,8 @@ public class ExcelParserService {
         //  Tüm hücreleri başta logla -analiz
         System.out.println("==== TARİHLER VE RENKLER ====");
 
+        int counter=0;
+
         for (int i = 0; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             if (row == null) continue;
@@ -84,12 +86,14 @@ public class ExcelParserService {
 
                     // Yazdır
                     if (matchedColor != null) {
+                        counter ++;
                         System.out.println("Hücre " + position + " → Tarih: " + localDate +
-                                " | Renk: " + hexColor + " → Anlam: " + matchedColor.getEventType());
+                                " | Renk: " + hexColor + " → Anlam: " + matchedColor.getEventType()  + "   "+counter);
                     } else {
+                        counter ++;
                         System.out.println("Hücre " + position + " → Tarih: " + localDate +
                                 " | Renk: " + (hexColor != null ? hexColor : "Yok") +
-                                " → Eşleşme bulunamadı.");
+                                " → Eşleşme bulunamadı."+ "   "+counter);
                     }
                 }
             }
