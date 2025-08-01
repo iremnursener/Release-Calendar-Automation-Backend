@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 public class Color {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "color_hex", length = 7)

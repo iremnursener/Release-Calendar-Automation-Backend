@@ -44,10 +44,6 @@ public class ExcelParserService {
         Sheet sheet = workbook.getSheetAt(0);
         Map<String, Color> colorLegend = loadColorLegendFromDB();
 
-        //  Tüm hücreleri başta logla -analiz
-        System.out.println("==== TARİHLER VE RENKLER ====");
-
-        int counter=0;
 
         for (int i = 0; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
@@ -84,48 +80,44 @@ public class ExcelParserService {
                         matchedColor = colorLegend.get(hexColor);
                     }
 
-                    // Yazdır
-                    if (matchedColor != null) {
-                        counter ++;
-                        System.out.println("Hücre " + position + " → Tarih: " + localDate +
-                                " | Renk: " + hexColor + " → Anlam: " + matchedColor.getEventType()  + "   "+counter);
-                    } else {
-                        counter ++;
-                        System.out.println("Hücre " + position + " → Tarih: " + localDate +
-                                " | Renk: " + (hexColor != null ? hexColor : "Yok") +
-                                " → Eşleşme bulunamadı."+ "   "+counter);
+//                    // KONTROL
+//                    if (matchedColor != null) {
+//                        counter ++;
+//                        System.out.println("Hücre " + position + " → Tarih: " + localDate +
+//                                " | Renk: " + hexColor + " → Anlam: " + matchedColor.getEventType());
+//                    } else {
+//                        counter ++;
+//                        System.out.println("Hücre " + position + " → Tarih: " + localDate +
+//                                " | Renk: " + (hexColor != null ? hexColor : "Yok") +
+//                                " → Eşleşme bulunamadı."+ "   "+counter);
+//                    }
+
+                    //DB YE KAYDET
+                    if (matchedColor != null ){
+                        Event event = Event.builder()
+                                .title(matchedColor.getEventType().toString())
+                                .color(matchedColor)
+                                .date(localDate)
+                                .description("  ")  // event type a göre açıklama gelecek buraya
+                                .createdBy(batch.getUploadedBy())
+                                .isActive(true)
+                                .createdAt(LocalDateTime.now())
+                                .build();
+                        event = eventRepository.save(event); //dbye atıldı
+                        parsedEvents.add(event);
+
+                        ImportBatchEvent ibe = ImportBatchEvent.builder()
+                                .batch(batch)
+                                .event(event)
+                                .tryCount(0)   //silinebilir
+                                .isActive(true)
+                                .createdAt(LocalDateTime.now())
+                                .build();
+                        importBatchEventRepository.save(ibe);
                     }
                 }
             }
         }
-
-
-//                            Event event = Event.builder()
-//                                    .title(matchedColor.getEventType().toString())
-//                                    .color(matchedColor)
-//                                    .date(date)
-//                                    .description("Excel'den yüklendi")
-//                                    .createdBy(batch.getUploadedBy())
-//                                    .isActive(true)
-//                                    .createdAt(LocalDateTime.now())
-//                                    .build();
-//                            event = eventRepository.save(event);
-//                            parsedEvents.add(event);
-//
-//                            ImportBatchEvent ibe = ImportBatchEvent.builder()
-//                                    .batch(batch)
-//                                    .event(event)
-//                                    .tryCount(0)
-//                                    .isActive(true)
-//                                    .createdAt(LocalDateTime.now())
-//                                    .build();
-//                            importBatchEventRepository.save(ibe);
-//
-//                        System.out.println(logPrefix + "Renk bilgisi yok veya okunamıyor.");
-
-
-
-
 
         workbook.close();
         return parsedEvents;

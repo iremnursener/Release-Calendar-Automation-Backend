@@ -19,7 +19,6 @@ import java.util.List;
 public class User {   //ROLE KULLANILMADI,PHONE NUMBER EKLENDİ
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "first_name", length = 60)
