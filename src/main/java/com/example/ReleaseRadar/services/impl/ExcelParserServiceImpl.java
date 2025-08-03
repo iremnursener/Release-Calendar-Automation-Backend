@@ -1,4 +1,4 @@
-package com.example.ReleaseRadar.services;
+package com.example.ReleaseRadar.services.impl;
 
 import com.example.ReleaseRadar.entities.Color;
 import com.example.ReleaseRadar.entities.Event;
@@ -8,12 +8,11 @@ import com.example.ReleaseRadar.repositories.IColorRepository;
 import com.example.ReleaseRadar.repositories.IEventRepository;
 import com.example.ReleaseRadar.repositories.IImportBatchEventRepository;
 import com.example.ReleaseRadar.repositories.IImportBatchRepository;
+import com.example.ReleaseRadar.services.IExcelParserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +25,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ExcelParserService {
+public class ExcelParserServiceImpl  implements IExcelParserService {
 
     private final IImportBatchRepository importBatchRepository;
     private final IColorRepository colorRepository;
@@ -126,7 +125,7 @@ public class ExcelParserService {
 
 
 
-    private Map<String, Color> loadColorLegendFromDB() {
+    public Map<String, Color> loadColorLegendFromDB() {
         List<Color> colors = colorRepository.findAll();
         Map<String, Color> map = new HashMap<>();
         for (Color color : colors) {
@@ -138,7 +137,7 @@ public class ExcelParserService {
         return map;
     }
 
-    private String normalizeHex(String hex) {
+    public String normalizeHex(String hex) {
         if (hex.startsWith("#")) {
             String rgb = hex.substring(1).toUpperCase();
             return "FF" + rgb;

@@ -1,10 +1,11 @@
-package com.example.ReleaseRadar.services;
+package com.example.ReleaseRadar.services.impl;
 
-import com.example.ReleaseRadar.entities.Event;
+import com.example.ReleaseRadar.dtos.Response;
 import com.example.ReleaseRadar.entities.ImportBatch;
 import com.example.ReleaseRadar.entities.User;
 import com.example.ReleaseRadar.repositories.IImportBatchRepository;
 import com.example.ReleaseRadar.repositories.IUserRepository;
+import com.example.ReleaseRadar.services.impl.ExcelParserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,20 +16,19 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ImportExcelService {
+public class ImportExcelServiceImpl {
 
     private final IImportBatchRepository importBatchRepository;
     private final IUserRepository userRepository;
-    private final ExcelParserService excelParserService;
+    private final ExcelParserServiceImpl excelParserService;
 
 
-    public void importExcel(MultipartFile file) {
+    public Response importExcel(MultipartFile file) {
 
 
         if (file == null || file.isEmpty()) { //DOSYA DOLU MU KONTROL
@@ -70,10 +70,16 @@ public class ImportExcelService {
 
         // EXCEL DOSYASINI PARSE EDEN SERVİSİ ÇAĞIR
         try {
-             excelParserService.parseExcelByBatch(savedBatch.getId(), file);
+            excelParserService.parseExcelByBatch(savedBatch.getId(), file);
         } catch (IOException e) {
             throw new RuntimeException("Excel dosyası işlenirken hata oluştu: " + e.getMessage());
         }
+
+
+        return Response.builder()
+                .status(200)
+                .message("Excel dosyası başarıyla yüklendi")
+                .build();
 
     }
 
