@@ -5,7 +5,6 @@ import com.example.ReleaseRadar.entities.ImportBatch;
 import com.example.ReleaseRadar.entities.User;
 import com.example.ReleaseRadar.repositories.IImportBatchRepository;
 import com.example.ReleaseRadar.repositories.IUserRepository;
-import com.example.ReleaseRadar.services.impl.ExcelParserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,7 @@ public class ImportExcelServiceImpl {
     private final IImportBatchRepository importBatchRepository;
     private final IUserRepository userRepository;
     private final ExcelParserServiceImpl excelParserService;
+    private final EmailReminderServiceImpl emailReminderService;
 
 
     public Response importExcel(MultipartFile file) {
@@ -56,6 +56,8 @@ public class ImportExcelServiceImpl {
             throw new RuntimeException("Dosya yazma hatası: " + e.getMessage(), e);
         }
 
+        //BURADAN SONRASI SERVİSLERE BÖLÜNEBİLİR
+
         //  ImportBatch oluştur
         ImportBatch batch = ImportBatch.builder()
                 .filePath(filePathForDb)
@@ -68,9 +70,14 @@ public class ImportExcelServiceImpl {
         // 2. DB'ye kaydet
         ImportBatch savedBatch = importBatchRepository.save(batch); //bunu sonra dönebiliriz belki
 
-        // EXCEL DOSYASINI PARSE EDEN SERVİSİ ÇAĞIR
+
+        // EXCEL DOSYASINI PARSE EDEN SERVİSİ ÇAĞIR VE EMAİL REMİNDERLARI OLUŞTUR
         try {
+
             excelParserService.parseExcelByBatch(savedBatch.getId(), file);
+
+            emailReminderService.createRemindersForImportBatch(savedBatch.getId().toString());
+
         } catch (IOException e) {
             throw new RuntimeException("Excel dosyası işlenirken hata oluştu: " + e.getMessage());
         }
