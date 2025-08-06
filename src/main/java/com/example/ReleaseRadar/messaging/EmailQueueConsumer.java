@@ -25,11 +25,19 @@ public class EmailQueueConsumer {
                 .orElseThrow();
 
         try {
+            // Event tarihini al ve formatla
+            String formattedDate = reminder.getEvent().getDate()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+
+            // Placeholder'ı değiştir
+            String subject = message.getSubject().replace("{{date}}", formattedDate);
+            String body = message.getBody().replace("{{date}}", formattedDate);
+
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(message.getTo());
-            helper.setSubject(message.getSubject());
-            helper.setText(message.getBody(), true); // HTML body
+            helper.setSubject(subject);
+            helper.setText(body, true); // HTML body
 
             mailSender.send(mimeMessage);
 

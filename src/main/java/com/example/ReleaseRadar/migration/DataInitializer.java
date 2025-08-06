@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.saveAll(List.of(
                     new User(1L, "Ahmet", "Yılmaz", "irem.sener19@gmail.com",  "5551112233","DEV", true, LocalDateTime.now(), null),
                     new User(2L, "Ayşe", "Kara", "tunayagmurtb@gmail.com", "5554445566", "DEV", true, LocalDateTime.now(), null),
-                    new User(3L, "Mehmet", "Demir", "mehmet.demir@example.com", "5557778899", "QA", true, LocalDateTime.now(), null)
+                    new User(3L, "Mehmet", "Demir", "ismail11burak35@gmail.com", "5557778899", "QA", true, LocalDateTime.now(), null)
             ));
         }
 
