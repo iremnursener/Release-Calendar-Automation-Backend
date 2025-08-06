@@ -11,4 +11,11 @@ public interface IEmailReminderRepository extends JpaRepository<EmailReminder, L
 
 
     List<EmailReminder> findBySendDatetimeBeforeAndStatus(LocalDateTime now, ReminderStatus status);
+
+    List<EmailReminder> findByStatusAndSendDatetime(ReminderStatus reminderStatus, LocalDateTime todayAtEight);
+
+    List<EmailReminder> findByStatusAndSendDatetimeBetween(ReminderStatus status,
+                                                           LocalDateTime start,
+                                                           LocalDateTime end);
+
 }

@@ -42,8 +42,10 @@ public class EmailReminderServiceImpl implements IEmailReminderService {
         RecipientGroup group = recipientGroupRepository.findByGroupName("All Stakeholders")
                 .orElseThrow(() -> new RuntimeException("Recipient group bulunamadı."));
 
-        // 4. Gönderim tarihi = Event tarihinden 5 gün öncesi
-        LocalDateTime sendDateTime = event.getDate().atStartOfDay().minusDays(5);
+        // 4. Gönderim tarihi = Event tarihinden 5 gün öncesi, saat 08:00
+        LocalDateTime sendDateTime = event.getDate()
+                .minusDays(5)              // önce 5 gün geriye git
+                .atTime(8, 0);              // sonra saat 08:00 olarak ayarla
 
         // 5. EmailReminder oluştur
         EmailReminder reminder = EmailReminder.builder()
@@ -51,7 +53,7 @@ public class EmailReminderServiceImpl implements IEmailReminderService {
                 .template(template)
                 .group(group)
                 .sendDatetime(sendDateTime)
-                .status(ReminderStatus.SENT)
+                .status(ReminderStatus.PENDING)
                 .lastTryAt(null)
                 .isActive(true)
                 .build();
