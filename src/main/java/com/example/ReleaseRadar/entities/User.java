@@ -36,7 +36,7 @@ public class User {   //ROLE KULLANILMADI,PHONE NUMBER EKLENDİ
     @Column(unique = true)
     private String email;
     @Pattern(regexp = "^[0-9]{10,15}$", message = "Telefon numarası sadece rakam içermeli ve 10-15 haneli olmalı")
-    @NotBlank(message = "Phone Number is required")  //PHONE NUMBER EKLENDİ
+    @NotBlank(message = "Phone Number is required")
     @Column(name = "phone_number")
     private String phoneNumber;
     private String department;

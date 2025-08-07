@@ -15,15 +15,12 @@ public class RecipientGroupMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "group_id")
     private RecipientGroup group;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

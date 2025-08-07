@@ -38,16 +38,16 @@ public class EmailReminderServiceImpl implements IEmailReminderService {
         EmailTemplate template = emailTemplateRepository.findByName(templateName)
                 .orElseThrow(() -> new RuntimeException("Template bulunamadı: " + templateName));
 
-        // 3. Varsayılan grup seç (örnek: All Stakeholders)
+        // Varsayılan grup  (All Stakeholders)
         RecipientGroup group = recipientGroupRepository.findByGroupName("All Stakeholders")
                 .orElseThrow(() -> new RuntimeException("Recipient group bulunamadı."));
 
-        // 4. Gönderim tarihi = Event tarihinden 5 gün öncesi, saat 08:00
+        // Gönderim tarihi = Event tarihinden 5 gün öncesi, saat 08:00
         LocalDateTime sendDateTime = event.getDate()
-                .minusDays(5)              // önce 5 gün geriye git
-                .atTime(8, 0);              // sonra saat 08:00 olarak ayarla
+                .minusDays(5)              // 5 gün geriye git
+                .atTime(8, 0);              //  saat 8 olarak ayarla
 
-        // 5. EmailReminder oluştur
+        // EmailReminder oluştur
         EmailReminder reminder = EmailReminder.builder()
                 .event(event)
                 .template(template)

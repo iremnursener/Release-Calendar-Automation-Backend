@@ -79,17 +79,6 @@ public class ExcelParserServiceImpl  implements IExcelParserService {
                         matchedColor = colorLegend.get(hexColor);
                     }
 
-//                    // KONTROL
-//                    if (matchedColor != null) {
-//                        counter ++;
-//                        System.out.println("Hücre " + position + " → Tarih: " + localDate +
-//                                " | Renk: " + hexColor + " → Anlam: " + matchedColor.getEventType());
-//                    } else {
-//                        counter ++;
-//                        System.out.println("Hücre " + position + " → Tarih: " + localDate +
-//                                " | Renk: " + (hexColor != null ? hexColor : "Yok") +
-//                                " → Eşleşme bulunamadı."+ "   "+counter);
-//                    }
 
                     //DB YE KAYDET
                     if (matchedColor != null ){
@@ -121,8 +110,6 @@ public class ExcelParserServiceImpl  implements IExcelParserService {
         workbook.close();
         return parsedEvents;
     }
-
-
 
 
     public Map<String, Color> loadColorLegendFromDB() {

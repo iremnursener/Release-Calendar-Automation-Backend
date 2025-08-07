@@ -16,10 +16,8 @@ public class RecipientGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String groupName;
     private String description;
-
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

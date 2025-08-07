@@ -30,7 +30,6 @@ public class ImportExcelServiceImpl {
 
     public Response importExcel(MultipartFile file) {
 
-
         if (file == null || file.isEmpty()) { //DOSYA DOLU MU KONTROL
             throw new IllegalArgumentException("Excel dosyası boş.");
         }
@@ -56,9 +55,7 @@ public class ImportExcelServiceImpl {
             throw new RuntimeException("Dosya yazma hatası: " + e.getMessage(), e);
         }
 
-        //BURADAN SONRASI SERVİSLERE BÖLÜNEBİLİR
-
-        //  ImportBatch oluştur
+        //ImportBatch oluştur
         ImportBatch batch = ImportBatch.builder()
                 .filePath(filePathForDb)
                 .fileName(fileName)
@@ -67,11 +64,10 @@ public class ImportExcelServiceImpl {
                 .uploadedBy(user)
                 .build();
 
-        // 2. DB'ye kaydet
-        ImportBatch savedBatch = importBatchRepository.save(batch); //bunu sonra dönebiliriz belki
+        //DB'ye kaydet
+        ImportBatch savedBatch = importBatchRepository.save(batch);
 
-
-        // EXCEL DOSYASINI PARSE EDEN SERVİSİ ÇAĞIR VE EMAİL REMİNDERLARI OLUŞTUR
+        //EXCEL DOSYASINI PARSE EDEN SERVİSİ ÇAĞIR VE EMAİL REMİNDERLARI OLUŞTUR
         try {
 
             excelParserService.parseExcelByBatch(savedBatch.getId(), file);
@@ -81,7 +77,6 @@ public class ImportExcelServiceImpl {
         } catch (IOException e) {
             throw new RuntimeException("Excel dosyası işlenirken hata oluştu: " + e.getMessage());
         }
-
 
         return Response.builder()
                 .status(200)

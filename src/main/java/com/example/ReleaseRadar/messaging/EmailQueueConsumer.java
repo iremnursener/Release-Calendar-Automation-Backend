@@ -29,7 +29,6 @@ public class EmailQueueConsumer {
             String formattedDate = reminder.getEvent().getDate()
                     .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
-            // Placeholder'ı değiştir
             String subject = message.getSubject().replace("{{date}}", formattedDate);
             String body = message.getBody().replace("{{date}}", formattedDate);
 

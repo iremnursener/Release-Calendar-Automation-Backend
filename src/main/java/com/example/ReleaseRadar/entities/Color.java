@@ -19,32 +19,22 @@ import java.time.LocalDateTime;
 public class Color {
     @Id
     private Long id;
-
     @Column(name = "color_hex", length = 7)
     private String colorHex;
-
     @Column(name = "color_name", length = 40)
     private String colorName;
-
     @Enumerated(EnumType.STRING)
     private CriticalityLevel criticalityLevel;
-
     @Enumerated(EnumType.STRING)
     private EventType eventType;
-
     private Boolean isActive;
-
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-
 
     @PrePersist
     protected void createDate() {
         createdAt = LocalDateTime.now();
     }
-
     @PreUpdate
     protected void updateDate() {
         updatedAt = LocalDateTime.now();

@@ -14,21 +14,17 @@ public class EmailTemplate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String subjectTpl;
     private String bodyHtmlTpl;
     private String bodyTextTpl;
-
     private Boolean isActive;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

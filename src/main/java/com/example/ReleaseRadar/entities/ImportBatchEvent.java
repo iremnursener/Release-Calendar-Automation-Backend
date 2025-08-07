@@ -21,15 +21,12 @@ public class ImportBatchEvent {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
-
     @ManyToOne
     @JoinColumn(name = "batch_id")
     private ImportBatch batch;
-
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
-
     private Integer tryCount;
     private Boolean isActive;
     private LocalDateTime createdAt;

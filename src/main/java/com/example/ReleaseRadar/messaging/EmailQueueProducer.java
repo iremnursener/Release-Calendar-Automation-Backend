@@ -1,7 +1,6 @@
-package com.example.ReleaseRadar.scheduler;
+package com.example.ReleaseRadar.messaging;
 
 import com.example.ReleaseRadar.dtos.EmailMessageDto;
-import com.example.ReleaseRadar.dtos.EmailReminderDto;
 import com.example.ReleaseRadar.entities.EmailReminder;
 import com.example.ReleaseRadar.enums.ReminderStatus;
 import com.example.ReleaseRadar.repositories.IEmailReminderRepository;
@@ -19,7 +18,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailReminderScheduler {
+public class EmailQueueProducer {
 
     private final IEmailReminderRepository emailReminderRepository;
     private final RabbitTemplate rabbitTemplate;
@@ -27,7 +26,7 @@ public class EmailReminderScheduler {
 
     // Her sabah 08:00'de çalışır
     // @Scheduled(cron = "0 0 8 * * *")
-    @Scheduled(cron = "0 * * * * *") // her dakika başında DENEME
+    @Scheduled(cron = "0 * * * * *") // her dakika başında-DENEME
 
     public void queueEmailsForSending() {
 
@@ -36,13 +35,12 @@ public class EmailReminderScheduler {
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();         // 00:00  KONTROL
         LocalDateTime endOfDay = today.atTime(23, 59, 59);       // 23:59:59  KONTROL
-
-        LocalDateTime todayAtEight = today.atTime(8, 0);
+        //LocalDateTime todayAtEight = today.atTime(8, 0);
 
 //        List<EmailReminder> reminders = emailReminderRepository
 //                .findByStatusAndSendDatetime(ReminderStatus.PENDING, LocalDateTime.now()); //normalde saat 8 de olacak yani todayAtEight
 
-        List<EmailReminder> reminders = emailReminderRepository
+        List<EmailReminder> reminders = emailReminderRepository  //GÜN İÇİNDE GÖNDERİLMESİ GEREKEN MAİL VARSA ALIR
                 .findByStatusAndSendDatetimeBetween(ReminderStatus.PENDING, startOfDay, endOfDay);
 
         for (EmailReminder reminder : reminders) {
