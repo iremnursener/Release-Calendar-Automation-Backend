@@ -1,4 +1,4 @@
-package com.example.ReleaseRadar.messaging;
+package com.example.ReleaseRadar.messaging.producer;
 
 import com.example.ReleaseRadar.dtos.EmailMessageDto;
 import com.example.ReleaseRadar.entities.EmailReminder;
@@ -21,34 +21,26 @@ import java.util.List;
 public class EmailQueueProducer {
 
     private final IEmailReminderRepository emailReminderRepository;
-    private final RabbitTemplate rabbitTemplate;
     private final IRecipientGroupMemberRepository recipientGroupMemberRepository;
+    private final AsyncEmailSender asyncEmailSender;
 
-    // Her sabah 08:00'de çalışır
-    // @Scheduled(cron = "0 0 8 * * *")
-    @Scheduled(cron = "0 * * * * *") // her dakika başında-DENEME
-
+    // @Scheduled(cron = "0 0 8 * * *")  // prod
+    @Scheduled(cron = "0 * * * * *")     // deneme
     public void queueEmailsForSending() {
-
-        log.info("scheduler çalıştı lokal " );
+        log.info("scheduler çalıştı lokal");
 
         LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();         // 00:00  KONTROL
-        LocalDateTime endOfDay = today.atTime(23, 59, 59);       // 23:59:59  KONTROL
-        //LocalDateTime todayAtEight = today.atTime(8, 0);
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(23, 59, 59);
 
-//        List<EmailReminder> reminders = emailReminderRepository
-//                .findByStatusAndSendDatetime(ReminderStatus.PENDING, LocalDateTime.now()); //normalde saat 8 de olacak yani todayAtEight
-
-        List<EmailReminder> reminders = emailReminderRepository  //GÜN İÇİNDE GÖNDERİLMESİ GEREKEN MAİL VARSA ALIR
+        List<EmailReminder> reminders = emailReminderRepository
                 .findByStatusAndSendDatetimeBetween(ReminderStatus.PENDING, startOfDay, endOfDay);
 
-        for (EmailReminder reminder : reminders) {  //asenkron olacak
+        for (EmailReminder reminder : reminders) {
+            List<String> emails = recipientGroupMemberRepository
+                    .findEmailsByEmailReminderId(reminder.getId());
 
-            List<String> emailAddresses =
-                    recipientGroupMemberRepository.findEmailsByEmailReminderId(reminder.getId());
-
-            for (String email : emailAddresses) {
+            for (String email : emails) {
                 EmailMessageDto dto = EmailMessageDto.builder()
                         .emailReminderId(reminder.getId())
                         .to(email)
@@ -56,7 +48,9 @@ public class EmailQueueProducer {
                         .body(reminder.getTemplate().getBodyHtmlTpl())
                         .build();
 
-                rabbitTemplate.convertAndSend("email-send-queue", dto);
+                // ASYNC publish
+                asyncEmailSender.send(dto);
             }
+        }
     }
-}}
+}
