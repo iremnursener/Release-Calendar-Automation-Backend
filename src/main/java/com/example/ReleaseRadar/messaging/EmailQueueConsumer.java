@@ -24,6 +24,7 @@ public class EmailQueueConsumer {
         EmailReminder reminder = emailReminderRepository.findById(message.getEmailReminderId())
                 .orElseThrow();
 
+        //TO do: hata alınırsa dead letter queueya atılacak count 3 olcak
         try {
             // Event tarihini al ve formatla
             String formattedDate = reminder.getEvent().getDate()

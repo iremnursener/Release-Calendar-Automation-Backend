@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 // Gelen JSON'da tanımadığın ekstra alanlar varsa, hata fırlatmak yerine onları yok sayar.
 
-public class RecipientGroupMemberDto {
+public class RecipientGroupMemberDto { //SİLİNEBİLİR
     private Long id;
     private RecipientGroupDto group;
     private UserDto user;

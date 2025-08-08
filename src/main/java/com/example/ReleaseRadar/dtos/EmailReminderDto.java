@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-@AllArgsConstructor
+@AllArgsConstructor  //SİLİNEBİLİR
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL) //null olan alanları JSON çıktısına dahil etme.

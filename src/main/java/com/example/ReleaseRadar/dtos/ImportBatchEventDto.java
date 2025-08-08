@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 // Gelen JSON'da tanımadığın ekstra alanlar varsa, hata fırlatmak yerine onları yok sayar.
 
-public class ImportBatchEventDto {
+public class ImportBatchEventDto { //SİLİNEBİLİR
     private Long id;
     private ImportBatchDto batch;
     private EventDto event;

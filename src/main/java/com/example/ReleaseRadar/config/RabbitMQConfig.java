@@ -12,6 +12,8 @@ import java.util.Collections;
 @Configuration
 public class RabbitMQConfig {
 
+
+    //direct exchange oluştur ,routing key olcak
     @Bean
     public Queue emailQueue() {
         return new Queue("email-send-queue", true);

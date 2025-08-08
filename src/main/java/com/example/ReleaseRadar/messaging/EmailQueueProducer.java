@@ -30,7 +30,7 @@ public class EmailQueueProducer {
 
     public void queueEmailsForSending() {
 
-        log.info("scheduler çalıştı" );
+        log.info("scheduler çalıştı lokal " );
 
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();         // 00:00  KONTROL
@@ -43,7 +43,7 @@ public class EmailQueueProducer {
         List<EmailReminder> reminders = emailReminderRepository  //GÜN İÇİNDE GÖNDERİLMESİ GEREKEN MAİL VARSA ALIR
                 .findByStatusAndSendDatetimeBetween(ReminderStatus.PENDING, startOfDay, endOfDay);
 
-        for (EmailReminder reminder : reminders) {
+        for (EmailReminder reminder : reminders) {  //asenkron olacak
 
             List<String> emailAddresses =
                     recipientGroupMemberRepository.findEmailsByEmailReminderId(reminder.getId());

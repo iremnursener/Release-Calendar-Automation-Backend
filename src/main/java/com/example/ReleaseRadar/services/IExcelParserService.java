@@ -13,6 +13,6 @@ public interface IExcelParserService {
 
 
     public List<Event> parseExcelByBatch(UUID batchId, MultipartFile file) throws IOException;
-    public Map<String, Color> loadColorLegendFromDB();
-    public String normalizeHex(String hex);
+
+
 }

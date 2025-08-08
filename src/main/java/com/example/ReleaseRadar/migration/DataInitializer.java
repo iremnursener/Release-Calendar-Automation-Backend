@@ -85,7 +85,7 @@ public class DataInitializer implements CommandLineRunner {
                             .build()
             ));
         }
-        if (recipientGroupRepository.count() == 0) {  // BUNU SERVİS OLARAK YAPABİLİRİZ ??
+        if (recipientGroupRepository.count() == 0) {
             // 1. Grup oluştur
             RecipientGroup devTeam = RecipientGroup.builder()
                     .groupName("DEV Team")
@@ -114,7 +114,7 @@ public class DataInitializer implements CommandLineRunner {
             List<User> allUsers = userRepository.findAll();
 
             for (User user : allUsers) {
-                String role = user.getDepartment(); // örnek: "DEV", "QA", "PM" vs
+                String role = user.getDepartment(); // "DEV", "QA"
 
                 RecipientGroupMember member = RecipientGroupMember.builder()
                         .user(user)

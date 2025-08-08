@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 // Gelen JSON'da tanımadığın ekstra alanlar varsa, hata fırlatmak yerine onları yok sayar.
 
-public class EmailTemplateDto {
+public class EmailTemplateDto { // SİLİNEBİLİR
     private Long id;
     private String name;
     private String subjectTpl;

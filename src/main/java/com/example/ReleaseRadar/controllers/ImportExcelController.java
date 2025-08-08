@@ -2,7 +2,7 @@ package com.example.ReleaseRadar.controllers;
 
 
 import com.example.ReleaseRadar.dtos.Response;
-import com.example.ReleaseRadar.services.impl.ImportExcelServiceImpl;
+import com.example.ReleaseRadar.services.importflow.ImportExcelServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +20,10 @@ public class ImportExcelController {
     private final ImportExcelServiceImpl importExcelService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Response> uploadExcel(@Valid @RequestParam("file") MultipartFile file) { //response dönülecek
-        try {
-            return ResponseEntity.ok(importExcelService.importExcel(file));
-        } catch (Exception e) {
-            Response errorResponse = Response.builder()
-                    .status(400)
-                    .message("Yükleme hatası: " + e.getMessage())
-                    .build();
-            return  ResponseEntity.badRequest().body(errorResponse);
-        }
+    public ResponseEntity<Response> uploadExcel(@Valid @RequestParam("file") MultipartFile file) {
+
+        return ResponseEntity.ok(importExcelService.importExcel(file));
+
+
     }
 }
