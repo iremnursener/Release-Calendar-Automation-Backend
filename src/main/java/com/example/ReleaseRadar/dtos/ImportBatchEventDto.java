@@ -1,8 +1,6 @@
 package com.example.ReleaseRadar.dtos;
 
 
-import com.example.ReleaseRadar.entities.Event;
-import com.example.ReleaseRadar.entities.ImportBatch;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

@@ -2,7 +2,6 @@ package com.example.ReleaseRadar.repositories;
 
 import com.example.ReleaseRadar.entities.ImportBatchEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;

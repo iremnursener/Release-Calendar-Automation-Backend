@@ -1,7 +1,5 @@
 package com.example.ReleaseRadar.dtos;
 
-import com.example.ReleaseRadar.entities.Color;
-import com.example.ReleaseRadar.entities.User;
 import com.example.ReleaseRadar.enums.EventType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

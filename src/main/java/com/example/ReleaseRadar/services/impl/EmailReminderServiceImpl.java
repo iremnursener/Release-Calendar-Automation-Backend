@@ -53,7 +53,7 @@ public class EmailReminderServiceImpl implements IEmailReminderService {
         }
     }
 
-    // ===================== Helpers (Single Responsibility) =====================
+    // ===================== Helpers =====================
 
     private String resolveTemplateName(EventType eventType) {
         return switch (eventType) {

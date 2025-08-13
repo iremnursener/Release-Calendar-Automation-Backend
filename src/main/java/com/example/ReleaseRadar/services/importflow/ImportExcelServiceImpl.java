@@ -33,6 +33,7 @@ public class ImportExcelServiceImpl {
     private final IUserRepository userRepository;
     private final ExcelParserServiceImpl excelParserService;
     private final EmailReminderServiceImpl emailReminderService;
+    private final IImportChainFactory importChainFactory; // <-- eklendi
 
     @Transactional(rollbackOn = Exception.class)
     public Response importExcel(MultipartFile file) {
@@ -41,11 +42,12 @@ public class ImportExcelServiceImpl {
         User user = loadUploaderUser();
 
         Path fullPath = persistFileToDesktop(file);             // dosyayı kaydet
-        ImportBatch savedBatch = saveImportBatch(fullPath, file, user); // batch oluştur/kaydet
+        ImportBatch savedBatch = saveImportBatch(fullPath,user); // batch oluştur/kaydet
 
+
+        ImportHandler chain = importChainFactory.create();
         // === Chain of Responsibility: Excel parse -> Email reminders ===
         try {
-            ImportHandler chain = buildChain(); // sıra: parse -> reminders
             chain.handle(new ImportContext(savedBatch.getId(), file));
         } catch (IOException e) {
             throw new RuntimeException("Excel dosyası işlenirken hata oluştu: " + e.getMessage());
@@ -60,7 +62,7 @@ public class ImportExcelServiceImpl {
     // ------------------ SRP: Yardımcı metodlar ------------------
 
     private void validateFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
+        if (file == null || file.isEmpty()) { //size kontrolü ekle backend ve frontda
             throw new IllegalArgumentException("Excel dosyası boş.");
         }
     }
@@ -68,6 +70,7 @@ public class ImportExcelServiceImpl {
     private User loadUploaderUser() {
         return userRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+        //yeni exception tanımlanacak runtime olmasın
     }
 
     private Path persistFileToDesktop(MultipartFile file) {
@@ -87,11 +90,11 @@ public class ImportExcelServiceImpl {
         return fullPath;
     }
 
-    private ImportBatch saveImportBatch(Path fullPath, MultipartFile file, User user) {
+    private ImportBatch saveImportBatch(Path fullPath, User user) {
         ImportBatch batch = ImportBatch.builder()
                 .filePath(fullPath.toString())
                 .fileName(fullPath.getFileName().toString())
-                .notes("Excel tablosu yüklendi")
+                .notes("Excel tablosu yüklendi") // constant tanımlayarak al
                 .isActive(true)
                 .uploadedBy(user)
                 .build();
@@ -99,11 +102,4 @@ public class ImportExcelServiceImpl {
         return importBatchRepository.save(batch);
     }
 
-    // Zinciri burada kuruyoruz: parse -> reminders
-    private ImportHandler buildChain() {
-        ImportHandler parse = new ExcelParseHandler(excelParserService);
-        ImportHandler reminders = new CreateRemindersHandler(emailReminderService);
-        parse.linkWith(reminders);
-        return parse;
-    }
 }

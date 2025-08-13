@@ -13,6 +13,7 @@ public class AsyncEmailSender {
     private final RabbitTemplate rabbitTemplate;
 
     @Async("emailSendExecutor")
+//    @Retry(name = "sendEmail")
     public void send(EmailMessageDto dto) {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EMAIL_EXCHANGE,

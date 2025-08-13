@@ -7,7 +7,6 @@ import com.example.ReleaseRadar.repositories.IEmailReminderRepository;
 import com.example.ReleaseRadar.repositories.IRecipientGroupMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +49,7 @@ public class EmailQueueProducer {
 
                 // ASYNC publish
                 asyncEmailSender.send(dto);
+
             }
         }
     }

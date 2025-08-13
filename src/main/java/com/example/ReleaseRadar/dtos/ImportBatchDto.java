@@ -1,7 +1,6 @@
 package com.example.ReleaseRadar.dtos;
 
 
-import com.example.ReleaseRadar.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
