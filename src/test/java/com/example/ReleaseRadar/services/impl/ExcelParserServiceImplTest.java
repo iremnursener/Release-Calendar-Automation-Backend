@@ -59,6 +59,9 @@ class ExcelParserServiceImplTest {
 
     @Test
     void shouldCreateEvent_whenDateCellHasMatchingColor() throws Exception {
+
+        when(importBatchRepository.findById(any(UUID.class)))
+                .thenReturn(Optional.of(batch));
         // Arrange
         // DB'deki renk efsanesi: ARGB FFCC0000 -> FREEZE
         Color red = Color.builder()
@@ -92,6 +95,9 @@ class ExcelParserServiceImplTest {
 
     @Test
     void shouldReturnEmpty_whenColorDoesNotMatch() throws Exception {
+
+        when(importBatchRepository.findById(any(UUID.class)))
+                .thenReturn(Optional.of(batch));
         // Arrange: DB'de hiç renk yok → eşleşme olmayacak
         when(colorRepository.findAll()).thenReturn(Collections.emptyList());
 
@@ -151,6 +157,99 @@ class ExcelParserServiceImplTest {
         return new MockMultipartFile(
                 "file",
                 "test.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                out.toByteArray()
+        );
+    }
+
+    @Test
+    void shouldIgnore_whenDateCellHasNoStyle() throws Exception {
+        stubBatchFound();
+        when(colorRepository.findAll()).thenReturn(Collections.emptyList()); // önemli değil
+
+        // Tarih değeri var ama HİÇ stil set etmiyoruz
+        XSSFWorkbook wb = new XSSFWorkbook();
+        var sheet = wb.createSheet();
+        var row = sheet.createRow(0);
+        var cell = row.createCell(0);
+        LocalDate d = LocalDate.of(2025,1,10);
+        cell.setCellValue(java.util.Date.from(d.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
+        // stil yok!
+
+        var file = toMultipart(wb);
+
+        var result = service.parseExcelByBatch(UUID.randomUUID(), file);
+
+        assertThat(result).isEmpty(); // hexColor=null → event oluşmaz
+        verify(eventRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldHandleFormulaCell_cachedTypeUsed() throws Exception {
+        stubBatchFound();
+        // Renk eşleşmesin, önemli değil; amaç FORMULA yolunu tetiklemek
+        when(colorRepository.findAll()).thenReturn(Collections.emptyList());
+
+        XSSFWorkbook wb = new XSSFWorkbook();
+        var sh = wb.createSheet();
+        var r = sh.createRow(0);
+        // A1: tarih
+        var a1 = r.createCell(0);
+        LocalDate d = LocalDate.of(2025,2,2);
+        a1.setCellValue(java.util.Date.from(d.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
+        var style = wb.createCellStyle();
+        style.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("m/d/yy"));
+        a1.setCellStyle(style);
+
+        // B1: FORMÜL → A1
+        var b1 = r.createCell(1);
+        b1.setCellFormula("A1"); // FORMULA dalı
+
+        var file = toMultipart(wb);
+
+        var result = service.parseExcelByBatch(UUID.randomUUID(), file);
+        assertThat(result).isEmpty(); // renk yok → event yok; ama FORMULA dalı sayıldı
+    }
+
+    @Test
+    void shouldNormalizeHashHex_inLegend() throws Exception {
+        stubBatchFound();
+
+        // DB: "#CC0000" → normalize ile "FFCC0000" olacak
+        var color = com.example.ReleaseRadar.entities.Color.builder()
+                .id(1L).colorHex("#CC0000")
+                .eventType(com.example.ReleaseRadar.enums.EventType.FREEZE)
+                .build();
+        when(colorRepository.findAll()).thenReturn(List.of(color));
+
+        when(eventRepository.save(any(Event.class))).thenAnswer(inv -> {
+            Event e = inv.getArgument(0); e.setId(1L); return e;
+        });
+
+        // Hücre rengi #CC0000 (ARGB: FFCC0000)
+        var file = buildOneCellExcel(
+                LocalDate.of(2025,3,3),
+                new org.apache.poi.xssf.usermodel.XSSFColor(new java.awt.Color(0xCC,0x00,0x00), null)
+        );
+
+        var result = service.parseExcelByBatch(UUID.randomUUID(), file);
+        assertThat(result).hasSize(1); // normalizeHex'in '#' dalı da kapsandı
+    }
+
+    // --- helper methods
+
+    private void stubBatchFound() {
+        when(importBatchRepository.findById(any(UUID.class))).thenReturn(
+                Optional.of(ImportBatch.builder()
+                        .id(UUID.randomUUID())
+                        .uploadedBy(com.example.ReleaseRadar.entities.User.builder().id(1L).build())
+                        .build())
+        );
+    }
+    private MockMultipartFile toMultipart(XSSFWorkbook wb) throws Exception {
+        var out = new java.io.ByteArrayOutputStream(); wb.write(out); wb.close();
+        return new org.springframework.mock.web.MockMultipartFile(
+                "file","test.xlsx",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 out.toByteArray()
         );
