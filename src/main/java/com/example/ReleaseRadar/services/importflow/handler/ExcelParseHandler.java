@@ -12,6 +12,6 @@ public class ExcelParseHandler extends ImportHandler {
 
     @Override
     protected void doHandle(ImportContext ctx) throws IOException {
-        excelParserService.parseExcelByBatch(ctx.getBatchId(), ctx.getFile());
+        excelParserService.parseExcelByBatch(ctx.batchId(), ctx.file());
     }
 }

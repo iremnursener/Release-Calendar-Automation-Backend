@@ -12,6 +12,6 @@ public class CreateRemindersHandler extends ImportHandler {
 
     @Override
     protected void doHandle(ImportContext ctx) throws IOException {
-        emailReminderService.createRemindersForImportBatch(ctx.getBatchId().toString());
+        emailReminderService.createRemindersForImportBatch(ctx.batchId().toString());
     }
 }
