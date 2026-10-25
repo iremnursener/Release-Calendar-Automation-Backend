@@ -4,7 +4,7 @@ Spring Boot service that turns a treasury's **yearly planning spreadsheet** into
 
 Operations teams used to track release windows, freeze periods and high-load days manually in a color-coded Excel file. This service ingests that file, interprets the cell colors into typed calendar events, and schedules reminder emails so the right people are warned before each critical day — no manual follow-up.
 
-> Built as a summer internship project at Yapı Kredi Teknoloji (Treasury Analytics).
+> Built as a summer internship project at Yapı Kredi Teknoloji.
 
 ---
 
